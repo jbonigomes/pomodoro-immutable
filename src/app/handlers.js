@@ -9,7 +9,7 @@ export const handlers = {
         store.dispatch(actions.addSessionLength());
 
         if (rules.isSession(store.getState())) {
-          store.dispatch(actions.setTime(store.getState().sessionLength * 60));
+          store.dispatch(actions.setTime(store.getState().get('sessionLength') * 60));
         }
       }
     };
@@ -21,7 +21,7 @@ export const handlers = {
         store.dispatch(actions.subtractSessionLength());
 
         if (rules.isSession(store.getState())) {
-          store.dispatch(actions.setTime(store.getState().sessionLength * 60));
+          store.dispatch(actions.setTime(store.getState().get('sessionLength') * 60));
         }
       }
     };
@@ -33,7 +33,7 @@ export const handlers = {
         store.dispatch(actions.addBreakLength());
 
         if (!rules.isSession(store.getState())) {
-          store.dispatch(actions.setTime(store.getState().breakLength * 60));
+          store.dispatch(actions.setTime(store.getState().get('breakLength') * 60));
         }
       }
     };
@@ -45,7 +45,7 @@ export const handlers = {
         store.dispatch(actions.subtractBreakLength());
 
         if (!rules.isSession(store.getState())) {
-          store.dispatch(actions.setTime(store.getState().breakLength * 60));
+          store.dispatch(actions.setTime(store.getState().get('breakLength') * 60));
         }
       }
     };
@@ -54,24 +54,24 @@ export const handlers = {
   togglePaused (store) {
     return () => {
       if (!rules.isPaused(store.getState())) {
-        clearInterval(store.getState().intervalID);
+        clearInterval(store.getState().get('intervalID'));
         store.dispatch(actions.setIntervalID(null));
       }
       else {
         const intervalID = setInterval(() => {
           if (rules.canSubtractTime(store.getState())) {
-            store.dispatch(actions.setTime(store.getState().time - 1));
+            store.dispatch(actions.setTime(store.getState().get('time') - 1));
           }
           else {
             helpers.playSound();
 
             if (rules.isSession(store.getState())) {
               store.dispatch(actions.setName('Break!'));
-              store.dispatch(actions.setTime(store.getState().breakLength * 60));
+              store.dispatch(actions.setTime(store.getState().get('breakLength') * 60));
             }
             else {
               store.dispatch(actions.setName('Session'));
-              store.dispatch(actions.setTime(store.getState().sessionLength * 60));
+              store.dispatch(actions.setTime(store.getState().get('sessionLength') * 60));
             }
           }
         }, 1000);

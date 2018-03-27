@@ -2,13 +2,16 @@ import './index.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+import { Map } from 'immutable';
 import { createStore } from 'redux';
 
+import { rules } from './app/rules';
 import { helpers } from './app/helpers';
 import { handlers } from './app/handlers';
 import { pomodoro } from './app/reducers';
 
-const initialState = {
+const initialState = Map({
   time: 25 * 60,
   breakLength: 5,
   sessionLength: 25,
@@ -16,7 +19,7 @@ const initialState = {
   intervalID: null,
 
   name: 'Session',
-};
+});
 
 const store = createStore(pomodoro, initialState);
 
@@ -30,7 +33,7 @@ const render = () => ReactDOM.render(
           onClick={handlers.subtractBreakLength(store)}>
           -
         </span>
-        <span className="b-len">{store.getState().breakLength}</span>
+        <span className="b-len">{store.getState().get('breakLength')}</span>
         <span
           className="add-break-length"
           onClick={handlers.addBreakLength(store)}>
@@ -45,7 +48,7 @@ const render = () => ReactDOM.render(
           onClick={handlers.subtractSessionLength(store)}>
           -
         </span>
-        <span className="s-len">{store.getState().sessionLength}</span>
+        <span className="s-len">{store.getState().get('sessionLength')}</span>
         <span
           className="add-session-length"
           onClick={handlers.addSessionLength(store)}>
@@ -55,10 +58,15 @@ const render = () => ReactDOM.render(
     </div>
 
     <div className="circle">
-      <div className="background"></div>
-      <div className="cover"></div>
-      <div className="title">{store.getState().name}</div>
-      <div className="timer">{helpers.formatTime(store.getState().time)}</div>
+      <div className={`background ${rules.isSession(store.getState()) ? 'green' : 'red'}`}></div>
+      <div
+        className="cover"
+        style={{height: `${helpers.formatPercentage(store.getState())}`}}>
+      </div>
+      <div className="title">{store.getState().get('name')}</div>
+      <div className="timer">
+        {helpers.formatTime(store.getState().get('time'))}
+      </div>
       <div className="toggle-paused" onClick={handlers.togglePaused(store)}></div>
     </div>
   </div>,

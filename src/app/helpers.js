@@ -1,3 +1,5 @@
+import { rules } from './rules';
+
 export const helpers = {
   formatTime (time) {
     const h = Math.floor(+time / 3600);
@@ -7,9 +9,12 @@ export const helpers = {
     return ((h>0?h+':'+(m<10?'0':''):'')+m+':'+(s<10?'0':'')+s);
   },
 
-  formatPercentage (time, length) {
-    const perc = Math.floor((time * 100) / (length * 60));
-    return `${perc}%`;
+  formatPercentage (state) {
+    const time = state.get('time');
+    const isSession = rules.isSession(state);
+    const length = isSession ? state.get('sessionLength') : state.get('breakLength');
+
+    return `${Math.floor((time * 100) / (length * 60))}%`;
   },
 
   audio: new window.AudioContext(),

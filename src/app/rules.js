@@ -1,12 +1,12 @@
 export const rules = {
-  isPaused: (state) => !state.intervalID,
-  isSession: (state) => state.name === 'Session',
+  isPaused: (state) => !state.get('intervalID'),
+  isSession: (state) => state.get('name') === 'Session',
 
-  canSubtractTime: (state) => state.time > 0,
+  canSubtractTime: (state) => state.get('time') > 0,
 
-  canAddBreakLength: (state) => !state.intervalID && state.breakLength < 120,
-  canSubtractBreakLength: (state) => !state.intervalID && state.breakLength > 1,
+  canAddBreakLength: (state) => !state.get('intervalID') && state.get('breakLength') < 120,
+  canSubtractBreakLength: (state) => !state.get('intervalID') && state.get('breakLength') > 1,
 
-  canAddSessionLength: (state) => !state.intervalID && state.sessionLength < 120,
-  canSubtractSessionLength: (state) => !state.intervalID && state.sessionLength > 1,
+  canAddSessionLength: (state) => !state.get('intervalID') && state.get('sessionLength') < 120,
+  canSubtractSessionLength: (state) => !state.get('intervalID') && state.get('sessionLength') > 1,
 };
